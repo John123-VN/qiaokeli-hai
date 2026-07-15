@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>巧克力海 - Chocolate Ocean Video Editor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            chocolate: {
+              900: '#120a07',
+              850: '#160d09',
+              800: '#1a0f0a',
+              700: '#1e120c',
+              600: '#2d1b12',
+              500: '#382318',
+              400: '#4a2e20',
+              accent: '#d4a373',
+              text: '#fdf0ed'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-chocolate-900 text-chocolate-text font-sans min-h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- Top Navigation Bar -->
+  <header class="flex justify-between items-center h-14 px-6 bg-chocolate-700 border-b border-chocolate-600 z-10">
+    <div class="flex items-center space-x-3">
+      <span class="text-xl font-black text-chocolate-accent tracking-wider">巧克力海 🌊</span>
+      <span class="text-[10px] bg-chocolate-500 text-chocolate-accent px-2 py-0.5 rounded border border-chocolate-400 uppercase font-mono">v1.4.6-Beta</span>
+    </div>
+
+    <!-- Active Navigation and Action Triggers -->
+    <div class="flex items-center space-x-4">
+      <a href="dreamina.html" class="flex items-center space-x-2 bg-gradient-to-r from-purple-800 to-chocolate-accent hover:opacity-90 text-white font-bold text-xs px-4 py-2 rounded-full transition shadow-lg animate-pulse">
+        <span>🌌</span>
+        <span>Dreamina AI Video Tool</span>
+      </a>
+      <button class="bg-chocolate-600 hover:bg-chocolate-500 text-xs font-semibold px-4 py-2 rounded text-chocolate-accent border border-chocolate-500 transition">
+        Export Project
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Multi-Pane Workspace -->
+  <div class="flex flex-1 overflow-hidden h-[calc(100vh-3.5rem)]">
+    
+    <!-- Left Sidebar: Assets Manager & Media Tools -->
+    <aside class="w-80 bg-chocolate-800 border-r border-chocolate-600 flex flex-col">
+      <div class="p-4 border-b border-chocolate-600 flex justify-between items-center">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-chocolate-accent">Media Library</h2>
+        <button class="text-xs bg-chocolate-700 hover:bg-chocolate-600 px-2 py-1 rounded text-gray-300 border border-chocolate-500">+ Import</button>
+      </div>
+
+      <!-- Asset Thumbnails -->
+      <div class="flex-1 p-4 overflow-y-auto space-y-3">
+        <div class="group relative bg-chocolate-900 border border-chocolate-600 rounded p-2 flex items-center space-x-3 hover:border-chocolate-accent transition cursor-pointer">
+          <div class="w-16 h-12 bg-black rounded flex items-center justify-center text-lg">🎥</div>
+          <div>
+            <p class="text-xs font-semibold truncate w-40">intro_sequence.mp4</p>
+            <p class="text-[10px] text-gray-500">10.4 MB | 0:12</p>
+          </div>
+        </div>
+
+        <div class="group relative bg-chocolate-900 border border-chocolate-600 rounded p-2 flex items-center space-x-3 hover:border-chocolate-accent transition cursor-pointer">
+          <div class="w-16 h-12 bg-black rounded flex items-center justify-center text-lg">🎵</div>
+          <div>
+            <p class="text-xs font-semibold truncate w-40">beat_drop_bgm.mp3</p>
+            <p class="text-[10px] text-gray-500">3.1 MB | 1:45</p>
+          </div>
+        </div>
+
+        <div class="p-4 bg-chocolate-950/50 rounded-lg border border-dashed border-chocolate-500 text-center space-y-2">
+          <p class="text-[11px] text-gray-400">Need creative cinematic B-Roll clips?</p>
+          <a href="dreamina.html" class="inline-block text-[11px] text-chocolate-accent font-bold hover:underline">
+            Generate with Dreamina AI →
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center & Right: Preview Monitor & Timeline System -->
+    <main class="flex-1 flex flex-col overflow-hidden bg-chocolate-950">
+      
+      <!-- Video Player Preview Monitor -->
+      <section class="flex-1 flex items-center justify-center p-6 relative">
+        <div class="w-full max-w-2xl aspect-video bg-black rounded-lg shadow-2xl border border-chocolate-650 flex items-center justify-center relative overflow-hidden">
+          <span class="text-4xl opacity-25">📺</span>
+          <p class="absolute bottom-4 left-4 text-xs font-mono text-gray-500 bg-black/60 px-2 py-1 rounded">00:00:00:00</p>
+        </div>
+      </section>
+
+      <!-- Video Timeline & Track Sequencer -->
+      <footer class="h-64 bg-chocolate-800 border-t border-chocolate-600 flex flex-col overflow-hidden">
+        
+        <!-- Timeline Control Header -->
+        <div class="h-10 border-b border-chocolate-600 px-4 flex items-center justify-between text-xs text-gray-400 bg-chocolate-700/50">
+          <div class="flex items-center space-x-4">
+            <button class="hover:text-chocolate-accent">▶ Play</button>
+            <button class="hover:text-chocolate-accent">✂ Split Clip</button>
+            <button class="hover:text-chocolate-accent">🗑 Delete</button>
+          </div>
+          <span class="font-mono text-chocolate-accent">00:00 / 00:30</span>
+        </div>
+
+        <!-- Tracks Container -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-2 font-mono">
+          <!-- Video Track 1 -->
+          <div class="flex items-center h-10 bg-chocolate-900 border border-chocolate-600 rounded overflow-hidden">
+            <span class="w-16 text-center text-[10px] bg-chocolate-700 border-r border-chocolate-600 font-bold">VIDEO 1</span>
+            <div class="flex-1 bg-chocolate-600/30 h-full flex items-center px-4 text-xs text-chocolate-accent">
+              🎬 intro_sequence.mp4 [======================] 12s
+            </div>
+          </div>
+          <!-- Audio Track 1 -->
+          <div class="flex items-center h-10 bg-chocolate-900 border border-chocolate-600 rounded overflow-hidden">
+            <span class="w-16 text-center text-[10px] bg-chocolate-700 border-r border-chocolate-600 font-bold">AUDIO 1</span>
+            <div class="flex-1 bg-purple-950/20 h-full flex items-center px-4 text-xs text-purple-300">
+              🎵 beat_drop_bgm.mp3 [=============================================] 30s
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+</body>
+</html>
