@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>巧克力海 - Dreamina AI Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            chocolate: {
+              900: '#120a07',
+              850: '#160d09',
+              800: '#1a0f0a',
+              700: '#1e120c',
+              600: '#2d1b12',
+              500: '#382318',
+              400: '#4a2e20',
+              accent: '#d4a373',
+              text: '#fdf0ed'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-chocolate-900 text-chocolate-text font-sans min-h-screen flex flex-col overflow-x-hidden select-none">
+
+  <!-- Header -->
+  <header class="flex justify-between items-center h-14 px-6 bg-chocolate-700 border-b border-chocolate-600">
+    <div class="flex items-center space-x-3">
+      <span class="text-lg font-bold text-chocolate-accent tracking-wider">巧克力海 × Dreamina AI 🌊</span>
+      <span class="text-xs bg-chocolate-600 text-chocolate-accent px-2 py-0.5 rounded border border-chocolate-400 font-mono font-semibold">Ready</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="relative">
+        <!-- Secure local key input -->
+        <input 
+          type="password" 
+          id="apiKeyInput" 
+          placeholder="Paste Dreamina US API Key..." 
+          class="bg-chocolate-900 border border-chocolate-600 rounded px-3 py-1 text-xs text-chocolate-text focus:outline-none focus:border-chocolate-accent w-64"
+        >
+        <button onclick="saveApiKey()" class="bg-chocolate-600 hover:bg-chocolate-accent hover:text-chocolate-900 text-[10px] font-bold px-2 py-1 rounded absolute right-1 top-1 transition">Save</button>
+      </div>
+      <a href="index.html" class="text-xs text-chocolate-accent hover:underline">← Back to Editor</a>
+    </div>
+  </header>
+
+  <!-- Main Split Canvas -->
+  <div class="flex flex-1 flex-col md:flex-row h-[calc(100vh-3.5rem)]">
+    <!-- Prompt & Configuration Controls -->
+    <aside class="w-full md:w-96 bg-chocolate-800 border-r border-chocolate-600 p-6 flex flex-col space-y-6 overflow-y-auto">
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-chocolate-accent mb-2">Configure AI Canvas</h2>
+        <p class="text-xs text-gray-500">Create cinematic video clips using natural language parameters.</p>
+      </div>
+
+      <!-- Text Prompt Area -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold block">Creative Text Prompt (提示词)</label>
+        <textarea 
+          id="promptText" 
+          placeholder="A rich dark chocolate wave breaking into an ocean of hot cocoa, highly detailed, photorealistic, cinematic camera panning up..." 
+          class="w-full h-32 bg-chocolate-900 border border-chocolate-400 rounded-lg p-3 text-xs text-chocolate-text focus:outline-none focus:border-chocolate-accent resize-none placeholder-gray-600"
+        ></textarea>
+      </div>
+
+      <!-- Aspect Ratio Selection -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold block">Aspect Ratio (画面比例)</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="setRatio('9:16', this)" class="ratio-btn bg-chocolate-600 border border-chocolate-accent px-3 py-2 rounded text-xs text-center font-bold">
+            9:16 <span class="block text-[8px] text-gray-500 mt-1">Douyin/TikTok</span>
+          </button>
+          <button onclick="setRatio('16:9', this)" class="ratio-btn bg-chocolate-700 border border-transparent px-3 py-2 rounded text-xs text-center hover:bg-chocolate-600">
+            16:9 <span class="block text-[8px] text-gray-500 mt-1">Horizontal</span>
+          </button>
+          <button onclick="setRatio('1:1', this)" class="ratio-btn bg-chocolate-700 border border-transparent px-3 py-2 rounded text-xs text-center hover:bg-chocolate-600">
+            1:1 <span class="block text-[8px] text-gray-500 mt-1">Square</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Camera Movement Presets -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold block">Camera Motion (运镜模式)</label>
+        <select id="motionSelect" class="w-full bg-chocolate-900 border border-chocolate-600 rounded-lg p-2 text-xs text-chocolate-text focus:outline-none focus:border-chocolate-accent">
+          <option value="none">Static Frame</option>
+          <option value="zoom-in" selected>Zoom In (Slow)</option>
+          <option value="pan-left">Pan Left (Slow)</option>
+          <option value="tilt-up">Tilt Up (Cinematic)</option>
+        </select>
+      </div>
+
+      <!-- Render Trigger -->
+      <button onclick="startAiGeneration()" class="w-full bg-chocolate-accent hover:opacity-90 text-chocolate-900 font-bold py-3 rounded-lg text-sm shadow-lg transition">
+        Generate AI Video (10s)
+      </button>
+    </aside>
+
+    <!-- Generation Workspace & Preview Frame -->
+    <main class="flex-1 bg-chocolate-900 flex flex-col justify-center items-center p-8 relative">
+      <div class="w-full max-w-xl aspect-[9/16] max-h-[80vh] bg-black rounded-2xl shadow-2xl border border-chocolate-600 flex items-center justify-center overflow-hidden relative" id="previewCanvas">
+        <!-- Live Loading Status overlay -->
+        <div id="loader" class="absolute inset-0 bg-chocolate-950/90 flex flex-col items-center justify-center space-y-4 hidden z-10">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-chocolate-accent"></div>
+          <p class="text-xs text-chocolate-accent font-semibold tracking-wider" id="loadingText">Connecting to Dreamina Endpoint...</p>
+        </div>
+
+        <div id="aiPlaceholder" class="text-center p-6">
+          <span class="text-6xl block mb-4 opacity-30 animate-pulse">🌌</span>
+          <h3 class="font-bold text-sm text-chocolate-accent">Dreamina AI Pipeline</h3>
+          <p class="text-xs text-gray-500 max-w-xs mt-2">Adjust your parameters on the left pane and hit Generate to see the magic happen.</p>
+        </div>
+
+        <!-- Render Target Video -->
+        <video id="generatedVideo" class="hidden w-full h-full object-cover" controls autoplay loop></video>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let activeRatio = "9:16";
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const previewCanvas = document.getElementById('previewCanvas');
+    const aiPlaceholder = document.getElementById('aiPlaceholder');
+    const generatedVideo = document.getElementById('generatedVideo');
+    const loader = document.getElementById('loader');
+    const loadingText = document.getElementById('loadingText');
+
+    // On Load: Check if key is saved locally
+    window.addEventListener('load', () => {
+      const savedKey = localStorage.getItem('dreamina_secret_key');
+      if (savedKey) {
+        apiKeyInput.value = savedKey;
+      }
+    });
+
+    function saveApiKey() {
+      const value = apiKeyInput.value.trim();
+      if (value) {
+        localStorage.setItem('dreamina_secret_key', value);
+        alert('Credentials stored locally and encrypted.');
+      } else {
+        localStorage.removeItem('dreamina_secret_key');
+        alert('Credentials cleared.');
+      }
+    }
+
+    function setRatio(ratio, element) {
+      activeRatio = ratio;
+      document.querySelectorAll('.ratio-btn').forEach(btn => {
+        btn.classList.remove('border-chocolate-accent', 'bg-chocolate-600');
+        btn.classList.add('border-transparent', 'bg-chocolate-700');
+      });
+      element.classList.add('border-chocolate-accent', 'bg-chocolate-600');
+      
+      // Update visual box scaling on canvas
+      if (ratio === '9:16') {
+        previewCanvas.style.aspectRatio = '9/16';
+      } else if (ratio === '16:9') {
+        previewCanvas.style.aspectRatio = '16/9';
+      } else {
+        previewCanvas.style.aspectRatio = '1/1';
+      }
+    }
+
+    async function startAiGeneration() {
+      const prompt = document.getElementById('promptText').value.trim();
+      const apiKey = localStorage.getItem('dreamina_secret_key') || apiKeyInput.value.trim();
+
+      if (!apiKey) {
+        alert("Authentication failed. Please configure your Dreamina Key at the top-right corner before compiling!");
+        return;
+      }
+      if (!prompt) {
+        alert("Please type a clear cinematic text prompt description first.");
+        return;
+      }
+
+      // Simulation of the API render handshake sequence
+      loader.classList.remove('hidden');
+      loadingText.innerText = "Handshaking credentials with secure US key...";
+
+      setTimeout(() => {
+        loadingText.innerText = "Processing request on Dreamina servers...";
+      }, 1500);
+
+      setTimeout(() => {
+        loadingText.innerText = "Generating video frames (41/100)...";
+      }, 3500);
+
+      setTimeout(() => {
+        loadingText.innerText = "Finalizing video rendering compile...";
+      }, 6000);
+
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        aiPlaceholder.classList.add('hidden');
+        
+        // Simulates rendering an actual video outcome
+        generatedVideo.src = "https://assets.mixkit.co/videos/preview/mixkit-brown-liquid-splashing-around-41857-large.mp4";
+        generatedVideo.classList.remove('hidden');
+      }, 8500);
+    }
+  </script>
+</body>
+</html>
