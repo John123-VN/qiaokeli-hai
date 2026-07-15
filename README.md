@@ -31,7 +31,7 @@
 
 ```bash
 # 1. 克隆仓库
-git clone [https://github.com/yourusername/chocolate-ocean.git](https://github.com/yourusername/chocolate-ocean.git)
+git clone [https://github.com/John123-VN/chocolate-ocean.git](https://github.com/John123-VN/chocolate-ocean.git)
 cd chocolate-ocean
 
 # 2. 安装全部依赖
