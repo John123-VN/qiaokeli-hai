@@ -9,7 +9,7 @@ require('dotenv').config();
 class DreaminaEngine {
   constructor() {
     // Automatically load the key from the system environment variables
-    this.apiKey = process.env.us-91ac163930867985dbee7f667fbffd41;
+    this.apiKey = process.env.ARK_DREAMINA_API_KEY;
     this.generationQueue = [];
     this.supportedAspectRatios = ["9:16", "16:9", "1:1"];
 
